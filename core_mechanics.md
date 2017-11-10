@@ -63,7 +63,7 @@ INJURED(TORSO) - both OFFENCE and DEFENCE debuff, minor augmentation of HEALTH l
 INJURED(LEGS) - both OFFENCE and DEFENCE debuff, same as SLOWED, not as bad as DISORIENTED
 WOUNDED - a severe OFFENCE and DEFENCE debuff, augmented HEALTH loss
 DISARMED - has to fight with bare hands or sacrifice attacks for trying to regain his WEAPON
-MISSED(N)- -1 to DEFENCE on N-th consecutive miss
+MISSE - -1 to DEFENCE on each consecutive miss (can be applied many times)
 
 ##### RACES & CLASSES
 Future Warrior subclasses should be implemented through EFFECTS, e.g.:

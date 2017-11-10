@@ -1,14 +1,15 @@
 from items import Item, Weapon, Armor, Shield, DmgReduction
 import pprint
+from random import randrange
 
 """
-
+Warriors fight
 """
 
 
 class Warrior(object):
     """
-    Fights, equips, gains, drops, discards. Has: name, health, was_hit, items, offense, defense, effects
+    Equips, gains, drops, discards. Has: name, health, was_hit, items, offense, defense, effects
     """
 
     def __init__(self, name,
@@ -91,9 +92,6 @@ class Warrior(object):
     def effects(self, value):
         self._effects = effects
 
-    def attack(self, opponent, weapon):
-        pass
-
     def equip_item(self, item):
         self._items.append(item)
 
@@ -108,7 +106,7 @@ class Warrior(object):
 
 
 class Battle(object):
-    """docstring for Battle"""
+    """Commences. Has: attacker, defender"""
 
     def __init__(self, attacker, defender):
         super(Battle, self).__init__()
@@ -131,6 +129,30 @@ class Battle(object):
     @defender.setter
     def defender(self, value):
         self._defender = value
+
+    def commence(self):
+        while self._attacker.health and self._defender.health:
+            self.resolve_round()
+
+    def resolve_round(self):
+        pass
+
+    def calculate_hit(self):
+        pass
+
+    def calculate_parry(self):
+        pass
+
+    def calculate_block(self):
+        pass
+
+    def calculate_damage(self):
+        pass
+
+    def swap_sides(self):
+        temp = self._attacker
+        self._attacker = self._defender
+        self._defender = temp
 
 
 def main():
