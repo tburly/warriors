@@ -6,7 +6,7 @@ import pprint
 """
 
 
-class Warrior:
+class Warrior(object):
     """
     Fights, equips, gains, drops, discards. Has: name, health, was_hit, items, offense, defense, effects
     """
@@ -19,16 +19,17 @@ class Warrior:
                  defense=5,
                  effects=None):
 
+        super(Warrior, self).__init__()
+
         self._name = name
         self._health = health
         self._was_hit = was_hit
         if items is None:
-            self._items = [Weapon("Bare Hand", (1, 3), 1.0, -1), Weapon("Bare Hand", (1, 3), 1.0, -1)]
+            self._items = []
         else:
             self._items = items
         self._offense = offense
         self._defense = defense
-        self._misses_count = misses_count
         if effects is None:
             self._effects = []
         else:
@@ -106,10 +107,12 @@ class Warrior:
         self._effects.remove(effect)
 
 
-class Battle:
+class Battle(object):
     """docstring for Battle"""
 
     def __init__(self, attacker, defender):
+        super(Battle, self).__init__()
+
         self._attacker = attacker
         self._defender = defender
 
@@ -132,13 +135,15 @@ class Battle:
 
 def main():
     dagobert = Warrior("Dagobert")
+    dagobert.equip_item(Weapon("Longsword", (5, 12), "slashing", 1.0, 15))
+    dagobert.equip_item(Shield("Tower Shield", (1, 4), to_block=25))
+    dagobert.equip_item(Armor("Chainmail", dmg_reduction=DmgReduction(4, 3, 2)))
     print()
     pprint.pprint(dir(dagobert))
-    print("Hail, my good fellow. My name is {}. My health is {}. If someone says I was hit, then it's {}. I'm equipped with: {}. My offense/defense rating is {}/{}. I'm affected by following effects: {}".format(dagobert.name, dagobert.health, dagobert.was_hit, ["{} ({}, {}, {})".format(item.name, item.handedness, item.dmg_type, item.to_parry) for item in dagobert.items], dagobert.offense, dagobert.defense, dagobert.effects))
-    print(type(dagobert.name))
-    print("handedness:", dagobert.items[0].handedness)
-    print("dmg_type: ", dagobert.items[0].dmg_type)
-    print("to_parry:", dagobert.items[0].to_parry)
+    print("Hail, my good fellow. My name is {}. My health is {}. If someone says I was hit, then it's {}. I'm equipped with: {}. My offense/defense rating is {}/{}. I'm affected by following effects: {}".format(dagobert.name, dagobert.health, dagobert.was_hit, [item.name for item in dagobert.items], dagobert.offense, dagobert.defense, dagobert.effects))
+
+    for item in dagobert.items:
+        print(str(item))
 
 
 main()

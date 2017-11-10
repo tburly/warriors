@@ -2,11 +2,23 @@ from collections import namedtuple
 
 DmgReduction = namedtuple("DmgReduction", ["slashing", "piercing", "bludgeoning"])
 
+# self._items = [Weapon(name="Bare Hand",
+#                       damage=(1, 3),
+#                       dmg_type="bludgeoning",
+#                       handedness=1.0,
+#                       to_parry=-1),
 
-class Item:
-    """Has: name"""
 
-    def __init__(self, name, handedness):
+class Item(object):
+    """
+    Has: name
+
+    This class is treated as an abstract class and shouldn't be instantiated"
+    """
+
+    def __init__(self, name):
+        super(Item, self).__init__()
+
         self._name = name
 
     @property
@@ -18,14 +30,17 @@ class Item:
         self._name = value
 
 
-class Weapon(Item):
-    """Has: damage, dmg_type, to_parry, handedness"""
+class OffensiveGear(Item):
+    """
+    Has: damage, dmg_type, handedness
 
-    def __init__(self, name, damage, handedness=1.0, to_parry=15, dmg_type="bludgeoning"):
-        super(Weapon, self).__init__(name, handedness)
+    This class is treated as an abstract class and shouldn't be instantiated"
+    """
+
+    def __init__(self, damage, dmg_type, handedness, **kwargs):
+        super(OffensiveGear, self).__init__(**kwargs)
         self._damage = damage  # two numbers tuple
         self._dmg_type = dmg_type  # corresponding to dmg_reduction in Armor
-        self._to_parry = to_parry
         self._handedness = handedness
 
     def __str__(self):
@@ -48,14 +63,6 @@ class Weapon(Item):
         self._dmg_type = value
 
     @property
-    def to_parry(self):
-        return self._to_parry
-
-    @to_parry.setter
-    def to_parry(self, value):
-        self._to_parry = to_parry
-
-    @property
     def handedness(self):
         return self._handedness
 
@@ -64,21 +71,39 @@ class Weapon(Item):
         self._handedness = value
 
 
-class Armor(Item):
-    """Has: dmg_reduction, encumbrance"""
+class Weapon(OffensiveGear):
+    """Has: to_parry"""
 
-    def __init__(self, name, dmg_reduction=DmgReduction(1, 1, 1), encumbrance=5):
-        super(Armor, self).__init__(name, dmg_reduction, encumbrance)
-        self._dmg_reduction = dmg_reduction  # corresponding to dmg_type in Weapon
-        self._encumbrance = encumbrance
+    def __init__(self, name, damage,
+                 dmg_type="bludgeoning",
+                 handedness=1.0,
+                 to_parry=-1):
+
+        super(Weapon, self).__init__(name=name, damage=damage, dmg_type=dmg_type, handedness=handedness)
+        self._to_parry = to_parry
+
+    def __str__(self):
+        return "{} ({}, {}, {}, {})".format(self.name, self.damage, self.dmg_type, self.handedness, self.to_parry)
 
     @property
-    def dmg_reduction(self):
-        return self._dmg_reduction
+    def to_parry(self):
+        return self._to_parry
 
-    @dmg_reduction.setter
-    def dmg_reduction(self, value):
-        self._dmg_reduction = value
+    @to_parry.setter
+    def to_parry(self, value):
+        self._to_parry = to_parry
+
+
+class DefensiveGear(Item):
+    """
+    Has: encumbrance
+
+    This class is treated as an abstract class and shouldn't be instantiated"
+    """
+
+    def __init__(self, encumbrance, **kwargs):  # UNPACKING!
+        super(DefensiveGear, self).__init__(**kwargs)
+        self._encumbrance = encumbrance
 
     @property
     def encumbrance(self):
@@ -89,12 +114,42 @@ class Armor(Item):
         self._encumbrance = encumbrance
 
 
-class Shield(Weapon, Armor):
+class Armor(DefensiveGear):
+    """Has: dmg_reduction"""
+
+    def __init__(self, name,
+                 encumbrance=5,
+                 dmg_reduction=DmgReduction(1, 1, 1)):
+
+        super(Armor, self).__init__(name=name, encumbrance=encumbrance)
+        self._dmg_reduction = dmg_reduction  # corresponding to dmg_type in Weapon
+
+    def __str__(self):
+        return "{} ({}, {})".format(self.name, self.encumbrance, self.dmg_reduction)
+
+    @property
+    def dmg_reduction(self):
+        return self._dmg_reduction
+
+    @dmg_reduction.setter
+    def dmg_reduction(self, value):
+        self._dmg_reduction = value
+
+
+class Shield(DefensiveGear, OffensiveGear):
     """Has: to_block"""
 
-    def __init__(self, name, handedness=1.0, dmg_reduction=DmgReduction(3, 3, 2), encumbrance=2, to_block=15):
-        super(Shield, self).__init__(name, handedness, dmg_reduction, encumbrance)
+    def __init__(self, name, damage,
+                 dmg_type="bludgeoning",
+                 handedness=1.0,
+                 encumbrance=1,
+                 to_block=-1):
+
+        super(Shield, self).__init__(name=name, damage=damage, dmg_type=dmg_type, handedness=handedness, encumbrance=encumbrance)
         self._to_block = to_block
+
+    def __str__(self):
+        return "{} ({}, {}, {}, {})".format(self.name, self.damage, self.dmg_type, self.handedness, self.to_block)
 
     @property
     def to_block(self):
