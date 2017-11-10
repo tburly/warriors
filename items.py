@@ -4,11 +4,10 @@ DmgReduction = namedtuple("DmgReduction", ["slashing", "piercing", "bludgeoning"
 
 
 class Item:
-    """Has: name, handedness"""
+    """Has: name"""
 
     def __init__(self, name, handedness):
         self._name = name
-        self._handedness = handedness
 
     @property
     def name(self):
@@ -18,23 +17,16 @@ class Item:
     def name(self, value):
         self._name = value
 
-    @property
-    def handedness(self):
-        return self._handedness
-
-    @handedness.setter
-    def handedness(self, value):
-        self._handedness = value
-
 
 class Weapon(Item):
-    """Has: damage, dmg_type, to_parry"""
+    """Has: damage, dmg_type, to_parry, handedness"""
 
     def __init__(self, name, damage, handedness=1.0, to_parry=15, dmg_type="bludgeoning"):
         super(Weapon, self).__init__(name, handedness)
         self._damage = damage  # two numbers tuple
         self._dmg_type = dmg_type  # corresponding to dmg_reduction in Armor
         self._to_parry = to_parry
+        self._handedness = handedness
 
     def __str__(self):
         return "{} ({})".format(self._name, self._dmg_type)
@@ -63,12 +55,20 @@ class Weapon(Item):
     def to_parry(self, value):
         self._to_parry = to_parry
 
+    @property
+    def handedness(self):
+        return self._handedness
+
+    @handedness.setter
+    def handedness(self, value):
+        self._handedness = value
+
 
 class Armor(Item):
     """Has: dmg_reduction, encumbrance"""
 
-    def __init__(self, name, handedness=0.0, dmg_reduction=DmgReduction(1, 1, 1), encumbrance=5):
-        super(Armor, self).__init__(name, handedness, dmg_reduction, encumbrance)
+    def __init__(self, name, dmg_reduction=DmgReduction(1, 1, 1), encumbrance=5):
+        super(Armor, self).__init__(name, dmg_reduction, encumbrance)
         self._dmg_reduction = dmg_reduction  # corresponding to dmg_type in Weapon
         self._encumbrance = encumbrance
 
@@ -89,7 +89,7 @@ class Armor(Item):
         self._encumbrance = encumbrance
 
 
-class Shield(Armor):
+class Shield(Weapon, Armor):
     """Has: to_block"""
 
     def __init__(self, name, handedness=1.0, dmg_reduction=DmgReduction(3, 3, 2), encumbrance=2, to_block=15):

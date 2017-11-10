@@ -2,10 +2,9 @@
 *.sublime-project
 *.sublime-workspace
 
-# Python compiled files
+# Python
 *.pyc
+__pycache__/
 
 # kopie robocze
 *.cpy
-
-battleship.py
