@@ -1,15 +1,15 @@
 EFFECTS = {
-    "miss": "MISS",
-    "encumbered": "ENCUMBERED",
     "bleeding": "BLEEDING",
+    "disarmed": "DISARMED",
+    "encumbered": "ENCUMBERED",
     "exhausted": "EXHAUSTED",
-    "injured(head)": "INJURED(HEAD)",
     "injured(hand)": "INJURED(HAND)",
+    "injured(head)": "INJURED(HEAD)",
+    "injured(legs)": "INJURED(LEGS)",
     "injured(off-hand)": "INJURED(OFF-HAND)",
     "injured(torso)": "INJURED(TORSO)",
-    "injured(legs)": "INJURED(LEGS)",
-    "wounded": "WOUNDED",
-    "disarmed": "DISARMED"
+    "miss": "MISS",
+    "wounded": "WOUNDED"
 }
 
 

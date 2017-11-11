@@ -2,12 +2,6 @@ from collections import namedtuple
 
 DmgReduction = namedtuple("DmgReduction", ["slashing", "piercing", "bludgeoning"])
 
-# self._items = [Weapon(name="Bare Hand",
-#                       damage=(1, 3),
-#                       dmg_type="bludgeoning",
-#                       handedness=1.0,
-#                       to_parry=-1),
-
 
 class Item(object):
     """
@@ -118,8 +112,8 @@ class Armor(DefensiveGear):
     """Has: dmg_reduction"""
 
     def __init__(self, name,
-                 encumbrance=5,
-                 dmg_reduction=DmgReduction(1, 1, 1)):
+                 encumbrance=0,
+                 dmg_reduction=DmgReduction(1, 0, 0)):
 
         super(Armor, self).__init__(name=name, encumbrance=encumbrance)
         self._dmg_reduction = dmg_reduction  # corresponding to dmg_type in Weapon
@@ -141,7 +135,7 @@ class Shield(DefensiveGear, OffensiveGear):
 
     def __init__(self, name, damage,
                  dmg_type="bludgeoning",
-                 handedness=1.0,
+                 handedness=0.5,
                  encumbrance=1,
                  to_block=-1):
 
@@ -158,3 +152,118 @@ class Shield(DefensiveGear, OffensiveGear):
     @to_block.setter
     def to_block(self, value):
         self._to_block = value
+
+
+class Inventory(object):
+    """Has: weapon, offhand_weapon, shield, armor and items"""
+
+    def __init__(self,  # no setting offhand and shield in constructor - only setters!
+                 weapon=WEAPONS["Bare Hand"],
+                 armor=ARMORS["Adventurer's Garb"],
+                 items=None):
+
+        super(Inventory, self).__init__()
+
+        self._weapon = weapon
+        self._offhand_weapon = WEAPONS["Bare Hand"]
+        self._shield = None
+        self._armor = armor
+        if items is None:
+            self._items = []
+        else:
+            self._items = items
+
+    def __str__(self):
+        text = []
+        if self._weapon is not None:
+            text.append(str(self._weapon))
+        if self._offhand_weapon is not None:
+            text.append(str(self._offhand_weapon))
+        if self._shield is not None:
+            text.append(str(self._shield))
+        if self._armor is not None:
+            text.append(str(self._armor))
+        if len(items) > 0:
+            for item in items:
+                text.append(str(item))
+
+        return "\n".join(text)
+
+    @property
+    def weapon(self):
+        return self._weapon
+
+    @weapon.setter
+    def weapon(self, value):
+        self._weapon = value
+
+    @property
+    def offhand_weapon(self):
+        return self._offhand_weapon
+
+    @offhand_weapon.setter
+    def offhand_weapon(self, value):
+        try:
+            if self._shield is not None:
+                raise ValueError("Can't wield an off-hand weapon while wielding a shield")
+            if self._weapon is not None:
+                if self._weapon.handedness > 1.0:
+                    raise ValueError("Can't wield an off-hand weapon while already wielding a greater than one-handed weapon")
+            if value.handedness > 1.0:
+                raise ValueError("Can't wield a greater than one-handed weapon in off-hand")
+
+            self._offhand_weapon = value
+
+        except ValueError:
+            self._offhand_weapon = None
+            raise
+
+    @property
+    def shield(self):
+        return self._shield
+
+    @shield.setter
+    def shield(self, value):
+        try:
+            if self._offhand_weapon is not None:
+                raise ValueError("Can't wield a shield while wielding an off-hand weapon")
+            if self._weapon is not None:
+                if self._weapon.handedness > 1.5:
+                    raise ValueError("Can't wield a shield while wielding a two-handed weapon")
+
+            self._shield = value
+
+        except ValueError:
+            self._shield = None
+            raise
+
+    @property
+    def armor(self):
+        return self._armor
+
+    @armor.setter
+    def armor(self, value):
+        self._armor = armor
+
+    @property
+    def items(self):
+        return self._items
+
+    @items.setter
+    def items(self, value):
+        self._items = items
+
+
+WEAPONS = {
+    "Bare Hand": Weapon("Bare Hand", (1, 3)),
+    "Longsword": Weapon("Longsword", (5, 12), "slashing", 1.0, 15)
+}
+
+SHIELDS = {
+    "Tower Shield": Shield("Tower Shield", (1, 4), to_block=25)
+}
+
+ARMORS = {
+    "Adventurer's Garb": Armor("Adventurer's Garb"),
+    "Chainmail": Armor("Chainmail", encumbrance=3, dmg_reduction=DmgReduction(4, 3, 2))
+}
