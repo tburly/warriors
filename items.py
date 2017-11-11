@@ -71,7 +71,7 @@ class Weapon(OffensiveGear):
     def __init__(self, name, damage,
                  dmg_type="bludgeoning",
                  handedness=1.0,
-                 to_parry=-1):
+                 to_parry=0):
 
         super(Weapon, self).__init__(name=name, damage=damage, dmg_type=dmg_type, handedness=handedness)
         self._to_parry = to_parry
@@ -137,7 +137,7 @@ class Shield(DefensiveGear, OffensiveGear):
                  dmg_type="bludgeoning",
                  handedness=0.5,
                  encumbrance=1,
-                 to_block=-1):
+                 to_block=15):
 
         super(Shield, self).__init__(name=name, damage=damage, dmg_type=dmg_type, handedness=handedness, encumbrance=encumbrance)
         self._to_block = to_block
@@ -154,6 +154,21 @@ class Shield(DefensiveGear, OffensiveGear):
         self._to_block = value
 
 
+WEAPONS = {
+    "Bare Hand": Weapon("Bare Hand", (1, 3)),
+    "Longsword": Weapon("Longsword", (5, 12), "slashing", 1.0, 15)
+}
+
+SHIELDS = {
+    "Tower Shield": Shield("Tower Shield", (1, 4), to_block=25)
+}
+
+ARMORS = {
+    "Adventurer's Garb": Armor("Adventurer's Garb"),
+    "Chainmail": Armor("Chainmail", encumbrance=3, dmg_reduction=DmgReduction(4, 3, 2))
+}
+
+
 class Inventory(object):
     """Has: weapon, offhand_weapon, shield, armor and items"""
 
@@ -165,7 +180,7 @@ class Inventory(object):
         super(Inventory, self).__init__()
 
         self._weapon = weapon
-        self._offhand_weapon = WEAPONS["Bare Hand"]
+        self._offhand_weapon = None
         self._shield = None
         self._armor = armor
         if items is None:
@@ -183,8 +198,8 @@ class Inventory(object):
             text.append(str(self._shield))
         if self._armor is not None:
             text.append(str(self._armor))
-        if len(items) > 0:
-            for item in items:
+        if len(self.items) > 0:
+            for item in self.items:
                 text.append(str(item))
 
         return "\n".join(text)
@@ -209,7 +224,7 @@ class Inventory(object):
             if self._weapon is not None:
                 if self._weapon.handedness > 1.0:
                     raise ValueError("Can't wield an off-hand weapon while already wielding a greater than one-handed weapon")
-            if value.handedness > 1.0:
+            if value is not None and value.handedness > 1.0:
                 raise ValueError("Can't wield a greater than one-handed weapon in off-hand")
 
             self._offhand_weapon = value
@@ -243,7 +258,7 @@ class Inventory(object):
 
     @armor.setter
     def armor(self, value):
-        self._armor = armor
+        self._armor = value
 
     @property
     def items(self):
@@ -251,19 +266,4 @@ class Inventory(object):
 
     @items.setter
     def items(self, value):
-        self._items = items
-
-
-WEAPONS = {
-    "Bare Hand": Weapon("Bare Hand", (1, 3)),
-    "Longsword": Weapon("Longsword", (5, 12), "slashing", 1.0, 15)
-}
-
-SHIELDS = {
-    "Tower Shield": Shield("Tower Shield", (1, 4), to_block=25)
-}
-
-ARMORS = {
-    "Adventurer's Garb": Armor("Adventurer's Garb"),
-    "Chainmail": Armor("Chainmail", encumbrance=3, dmg_reduction=DmgReduction(4, 3, 2))
-}
+        self._items = value
