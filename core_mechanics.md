@@ -10,9 +10,9 @@ Attack can have 3 different results: **miss** (bad for an attacker), **parry/blo
 
 ---
 ##### INITIATIVE FORMULA
-If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) > 0 ===> warrior #1 wins
-If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) = 0 ===> draw, roll again
-If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) > 0 ===> warrior #2 wins
+* If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) > 0 ===> warrior #1 wins
+* If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) = 0 ===> draw, roll again
+* If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) > 0 ===> warrior #2 wins
 Example:
 Dagobert's OFFENCE is 12 and he rolls 12, so his result equals: 24
 Rogbar's OFFENCE is 11 and he rolls 9, so his result equals: 20
