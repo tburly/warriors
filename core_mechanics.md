@@ -7,6 +7,7 @@ Each round warriors fight. Their durability in battle depends on their HEALTH an
 The fight in each round starts with one warrior swinging his weapon at the other and the other trying to defend himself. The chance to hit is decided by two d20 rolls (one for the attacker and another for the defender) which represent randomness of their efforts and depends on the attacker's OFFENSE and on his opponent's DEFFENCE which represent their corresponding, inherent abilities. Attack that doesn't miss still can be blocked by the opponent's shield or parried by his weapon. To better simulate real world it's generally easier to land a hit than to evade a hit, but it's mitigated by considerably high chances TO_PARRY or TO_BLOCK it - as in a real medieval fight. Those chances depend on two factors: an inherent weapon's/shield's bonus and (in greater extent) on the **quality of the attack** (decided by the attack/defense rolls and battle prowess of the opponents).
 
 Attack can have 3 different results: **miss** (bad for an attacker), **parry/block** (neutral), **hit** (bad for a defender). Each consecutive miss makes an unsuccessful attacker more vulnerable on his next defensive attempt (his DEFENSE gets a cumulative negative modifier - implemented as an EFFECT).
+
 ---
 ##### INITIATIVE FORMULA
 If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) > 0 ===> warrior #1 wins
@@ -33,9 +34,12 @@ Rogbar's shield bonus is 5 and he rolls 10, so his result equals: 15.
 Dagobert performed an attack with QoA of 16, so 15 - 16 = -1. Rogbar's fails to block an incoming hit.
 
 In case of using both a weapon and a shield, only the better of the two bonuses is used.
+
 ---
 
 TODO: CRITICAL HITS/MISSES. Critical hit should result in: 1) bypassing a chance to PARRY/BLOCK and 2) spike in DAMAGE dealt (and a chance for a special injury EFFECT). Critical misses should (maybe) provoke an attack of opportunity (a bonus attack against opponent's DEFENCE reduced to zero).
+
+---
 
 ### ATTACK - DAMAGE DEALT
 The damage dealt after a successful hit (that didn't missed a target and wasn't blocked or parried) depends first on the weapon's DAMAGE of the attacker and on the armor's DMG_REDUCTION of the defender and second on the quality of the attack (i.e. a good hit augments the damage). Damage comes in three types: SLASHING, PIERCING & BLUDGEONING. The augmenting effect of quality of the attack is different for all types (BLUDGEONING being the least affected and PIERCING the most).
