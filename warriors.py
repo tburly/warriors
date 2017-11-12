@@ -179,31 +179,33 @@ class Battle(object):
         self._rounds_count = value
 
     def resolve_initiative(self):
+        print()
+        print("******** BATTLE ********")
         print("Two brave warriors came to fight today:")
         print(str(self._attacker))
         print(str(self._defender))
 
         while True:
-            attacker_roll = self._attacker.offense + randrange(1, 21)
-            defender_roll = self._defender.offense + randrange(1, 21)
+            attacker_roll = randrange(1, 21)
+            defender_roll = randrange(1, 21)
 
-            print(self._attacker.name, "rolls", "*" + attacker_roll + "*", "for initiative")
-            print(self._defender.name, "rolls", "*" + defender_roll + "*", "for initiative")
+            print(self._attacker.name, "rolls", "*" + str(attacker_roll) + "*", "for initiative")
+            print(self._defender.name, "rolls", "*" + str(defender_roll) + "*", "for initiative")
 
             attacker_result = self._attacker.offense + attacker_roll
             defender_result = self._defender.offense + defender_roll
 
             if attacker_result > defender_result:
-                print(attacker_result, ">", defender_result + ".", self._attacker.name, "wins initiative")
+                print(attacker_result, ">", str(defender_result) + ".", self._attacker.name, "wins initiative")
                 print("Let the battle begin!")
                 break
 
             elif attacker_result == defender_result:
-                print(attacker_result, "=", defender_result + ".", "Draw! Let's roll again")
+                print(attacker_result, "=", str(defender_result) + ".", "Draw! Let's roll again")
                 continue
 
             elif attacker_result < defender_result:
-                print(attacker_result, "<", defender_result + ".", self._defender.name, "wins initiative")
+                print(attacker_result, "<", str(defender_result) + ".", self._defender.name, "wins initiative")
                 print("Let the battle begin!")
                 self.swap_sides()
                 break
@@ -218,14 +220,18 @@ class Battle(object):
             print("Defender is:", str(self._defender))
             self.resolve_round()
 
-            if self._attacker.health < 0:
+            if self._attacker.health <= 0:
                 print("************************")
+                print(self._defender.name + "'s health is: ", self._defender.health)
+                print(self._attacker.name + "'s health is: ", self._attacker.health)
                 print(self._defender.name, "wins after", self._rounds_count, "rounds of relentless battle.")
                 print("************************")
                 break
 
-            elif self._defender.health < 0:
+            elif self._defender.health <= 0:
                 print("************************")
+                print(self._attacker.name + "'s health is: ", self._attacker.health)
+                print(self._defender.name + "'s health is: ", self._defender.health)
                 print(self._attacker.name, "wins after", self._rounds_count, "rounds of relentless battle.")
                 print("************************")
                 break
@@ -243,10 +249,10 @@ class Battle(object):
         else:
             print("It's a hit!")
             hits += 1
-            resolve_hit(quality_of_attack, self._attacker.weapon)
+            self.resolve_hit(quality_of_attack, self._attacker.inventory.weapon)
 
         # off-hand attack
-        if self._attacker.offhand_weapon is not None:
+        if self._attacker.inventory.offhand_weapon is not None:
             quality_of_offhand_attack = self.calculate_offhand_hit()
             if quality_of_offhand_attack < 0:
                 print("It's a miss!")
@@ -255,12 +261,12 @@ class Battle(object):
             else:
                 print("It's a hit!")
                 hits += 1
-                resolve_hit(quality_of_offhand_attack, self._attacker.offhand_weapon)
+                self.resolve_hit(quality_of_offhand_attack, self._attacker.inventory.offhand_weapon)
 
         # MISS effect
-        if len(misses) > 0 and len(hits) == 0:  # only one miss counts (if there were no hits)
+        if misses > 0 and hits == 0:  # only one miss counts (if there were no hits)
             self._attacker.gain_effect(Effect(EFFECTS["miss"]))
-        if len(hits) > 0:
+        if hits > 0:
             # clear all MISS effects on the attacker
             for miss in [effect for effect in self._attacker.effects if effect.name == EFFECTS["miss"]]:
                 self._attacker.discard_effect(miss)
@@ -270,46 +276,50 @@ class Battle(object):
 
     def calculate_hit(self):
         print("*** HIT ***")
+        print(self._attacker.name, "swings his", self._attacker.inventory.weapon.name.lower(), "at", self._defender.name)
         attacker_roll = randrange(1, 21)
         defender_roll = randrange(1, 21)
-        print(self._attacker.name, "rolls", "*" + attacker_roll + "*", "for attack")
-        print(self._defender.name, "rolls", "*" + defender_roll + "*", "for defense")
+        print(self._attacker.name, "rolls", "*" + str(attacker_roll) + "*", "for attack")
+        print(self._defender.name, "rolls", "*" + str(defender_roll) + "*", "for defense")
 
-        quality_of_attack = self._attacker.offense + attacker_roll - (self.defender.defense + defender_roll)
+        quality_of_attack = self._attacker.offense + attacker_roll - (self._defender.defense + defender_roll)
 
-        qoa_text = str(self._attacker.offense) + " + " + str(attacker_roll) + " - " + str(self.defender.defense) + " - " + str(defender_roll) + " ="
+        qoa_text = str(self._attacker.offense) + " + " + str(attacker_roll) + " - " + str(self._defender.defense) + " - " + str(defender_roll) + " ="
         print(self._attacker.name + "'s QoA is:", qoa_text, quality_of_attack)
 
         return quality_of_attack
 
     def calculate_offhand_hit(self):
         print("*** OFF-HAND HIT ***")
+        print(self._attacker.name, "swings his", self._attacker.inventory.offhand_weapon.name.lower(), "at", self._defender.name)
         attacker_roll = randrange(1, 21)
         defender_roll = randrange(1, 21)
-        print(self._attacker.name, "rolls", "*" + attacker_roll + "*", "for off-hand attack")
-        print(self._defender.name, "rolls", "*" + defender_roll + "*", "for defense")
+        print(self._attacker.name, "rolls", "*" + str(attacker_roll) + "*", "for off-hand attack")
+        print(self._defender.name, "rolls", "*" + str(defender_roll) + "*", "for defense")
 
         # Fighting with an off-hand weapon is 25% tougher, so OFFENCE = OFFENCE * OFFHAND_MODIFIER (floored)
-        quality_of_attack = math.floor(self._attacker.offense * OFFHAND_MODIFIER) + attacker_roll - (self.defender.defense + defender_roll)
+        quality_of_attack = math.floor(self._attacker.offense * OFFHAND_MODIFIER) + attacker_roll - (self._defender.defense + defender_roll)
 
-        qoa_text = str(math.floor(self._attacker.offense * OFFHAND_MODIFIER)) + " + " + str(attacker_roll) + " - " + str(self.defender.defense) + " - " + str(defender_roll) + " ="
+        qoa_text = str(math.floor(self._attacker.offense * OFFHAND_MODIFIER)) + " + " + str(attacker_roll) + " - " + str(self._defender.defense) + " - " + str(defender_roll) + " ="
         print(self._attacker.name + "'s off-hand QoA is:", qoa_text, quality_of_attack)
 
         return quality_of_attack
 
     def calculate_block(self, qoa):
         print("*** BLOCK ***")
+        print(self._defender.name, "tries to block with his shield")
+        print("His blocking bonus is:", self._defender.inventory.shield.to_block)
         block_roll = randrange(1, 21)
-        print(self._defender.name, "rolls", "*" + block_roll + "*", "for block")
+        print(self._defender.name, "rolls", "*" + str(block_roll) + "*", "for block")
 
-        result = self._defender.shield.to_block + block_roll - qoa
-        result_text = str(self._defender.shield.to_block) + " + " + str(block_roll) + " - " + str(qoa)
+        result = self._defender.inventory.shield.to_block + block_roll - qoa
+        result_text = str(self._defender.inventory.shield.to_block) + " + " + str(block_roll) + " - " + str(qoa)
 
         if result < 0:
             print(result_text, "< 0, block failed!")
             return False
         else:
-            print(result_text, "< 0, block succeeded!")
+            print(result_text, "> 0, block succeeded!")
             return True
 
     def calculate_parry(self, qoa):
@@ -323,22 +333,22 @@ class Battle(object):
         print("*** PARRY ***")
         parrying_bonus = 0
         # 1)
-        if self._defender.weapon is not None and self._defender.offhand_weapon is None:
+        if self._defender.inventory.weapon is not None and self._defender.inventory.offhand_weapon is None:
             print(self._defender.name, "tries to parry with his main weapon")
-            parrying_bonus += self._defender.weapon.to_parry
+            parrying_bonus += self._defender.inventory.weapon.to_parry
         # 2)
-        elif self._defender.weapon is not None and self._defender.offhand_weapon is not None:
+        elif self._defender.inventory.weapon is not None and self._defender.inventory.offhand_weapon is not None:
             print(self._defender.name, "tries to parry with both his weapons")
-            parrying_bonus += self._defender.weapon.to_parry + math.floor(self._defender.offhand_weapon.to_parry * OFFHAND_MODIFIER)
+            parrying_bonus += self._defender.inventory.weapon.to_parry + math.floor(self._defender.inventory.offhand_weapon.to_parry * OFFHAND_MODIFIER)
         # 3)
-        elif self._defender.weapon is None and self._defender.offhand_weapon is not None:
+        elif self._defender.inventory.weapon is None and self._defender.inventory.offhand_weapon is not None:
             print(self._defender.name, "tries to parry with his off-hand weapon")
-            parrying_bonus += math.floor(self._defender.offhand_weapon.to_parry * OFFHAND_MODIFIER)
+            parrying_bonus += math.floor(self._defender.inventory.offhand_weapon.to_parry * OFFHAND_MODIFIER)
 
         print("His parrying bonus is:", parrying_bonus)
 
         parry_roll = randrange(1, 21)
-        print(self._defender.name, "rolls", "*" + parry_roll + "*", "for parry")
+        print(self._defender.name, "rolls", "*" + str(parry_roll) + "*", "for parry")
 
         result = parrying_bonus + parry_roll - qoa
         result_text = str(parrying_bonus) + " + " + str(parry_roll) + " - " + str(qoa)
@@ -347,7 +357,7 @@ class Battle(object):
             print(result_text, "< 0, parry failed!")
             return False
         else:
-            print(result_text, "< 0, parry succeeded!")
+            print(result_text, "> 0, parry succeeded!")
             return True
 
     def calculate_damage(self, qoa, weapon):
@@ -356,38 +366,38 @@ class Battle(object):
         dmg_reduction = 0
         if weapon.dmg_type == "bludgeoning":
             qoa_augmenting += (1 + qoa / 20) * 0.75
-            dmg_reduction += self.defender.armor.dmg_reduction.bludgeoning
+            dmg_reduction += self._defender.inventory.armor.dmg_reduction.bludgeoning
         elif weapon.dmg_type == "slashing":
             qoa_augmenting += 1 + qoa / 20
-            dmg_reduction += self.defender.armor.dmg_reduction.slashing
+            dmg_reduction += self._defender.inventory.armor.dmg_reduction.slashing
         elif weapon.dmg_type == "piercing":
             qoa_augmenting += (1 + qoa / 20) * 1.25
-            dmg_reduction += self.defender.armor.dmg_reduction.piercing
+            dmg_reduction += self._defender.inventory.armor.dmg_reduction.piercing
 
         print(self._attacker.name + "'s QoA Augmenting Factor is:", qoa_augmenting)
         print(self._defender.name + "'s Damage Reduction is:", dmg_reduction)
 
         weapon_roll = randrange(weapon.damage[0], weapon.damage[1] + 1)
-        print(self._attacker.name, "rolls", "*" + weapon_roll + "*", "for base weapon damage")
+        print(self._attacker.name, "rolls", "*" + str(weapon_roll) + "*", "for base weapon damage")
 
         damage_dealt = math.floor(weapon_roll * qoa_augmenting) - dmg_reduction
         damage_dealt_text = str(math.floor(weapon_roll * qoa_augmenting)) + " - " + str(dmg_reduction)
 
         if damage_dealt <= 0:
-            print(damage_dealt, "<= 0, no damage dealt")
+            print(damage_dealt_text, "<= 0, no damage dealt")
             return 0
         else:
-            print(damage_dealt, "> 0,", self._attacker.name, "deals", "*" + damage_dealt + "*", "of damage")
+            print(damage_dealt_text, "> 0,", self._attacker.name, "deals", "*" + str(damage_dealt) + "*", "of damage")
             return damage_dealt
 
     def resolve_hit(self, qoa, weapon):
         hit_deflected = False
-        if self._defender.shield is not None:
+        if self._defender.inventory.shield is not None:
             hit_deflected = self.calculate_block(qoa)
-        elif self._defender.weapon is not None or self_defender.offhand_weapon is not None:
+        elif self._defender.inventory.weapon is not None or self_defender.offhand_weapon is not None:
             hit_deflected = self.calculate_parry(qoa)
         if not hit_deflected:
-            self._defender.health - calculate_damage(qoa, weapon)
+            self._defender.health -= self.calculate_damage(qoa, weapon)
 
     def swap_sides(self):
         temp = self._attacker
@@ -408,12 +418,15 @@ def main():
     dagobert.equip_armor(ARMORS["Chainmail"])
 
     rogbar = Warrior("Rogbar")
-    rogbar.equip_weapon(WEAPONS["Short Sword"])
+    rogbar.equip_weapon(WEAPONS["Longsword"])
     rogbar.equip_offhand_weapon(WEAPONS["Short Sword"])
     rogbar.equip_armor(ARMORS["Chainmail"])
 
     report(dagobert)
     report(rogbar)
+
+    battle = Battle(dagobert, rogbar)
+    battle.commence()
 
 
 if __name__ == "__main__":

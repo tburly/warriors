@@ -90,3 +90,7 @@ Higher chance to DISARM for *Duelist*. And so on
 EFFECTS also should facilitate a possible introduction of races at some point.
 
 Introduction of STRENGTH, DEXTERITY & CONSTITUTION (and maybe some MAGIC) would spice things a lot, but maybe let's not overcomplicate everything too much from the start.
+
+STRENGTH should affect DAMAGE dealt most (BLUDGEONING > SLASHING > PIERCING).
+DEXTERITY should affect OFFENSE & DEFENSE most.
+CONSTITUTION should affect HEALTH most.
