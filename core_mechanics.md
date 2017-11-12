@@ -18,7 +18,6 @@ Dagobert's OFFENCE is 12 and he rolls 12, so his result equals: 24
 Rogbar's OFFENCE is 11 and he rolls 9, so his result equals: 20
 Dagobert wins initiative and attacks.
 ---
----
 ##### HIT ROLLS FORMULA
 OFFENCE + d20 - (DEFENCE + d20) = Quality of Attack (QoA), if >= 0 ===> a hit on target (can be blocked/parried)
 Example:
@@ -57,6 +56,7 @@ SLASHING QAF = (1 + QoA/20) * 1.00
 PIERCING QAF = (1 + QoA/20) * 1.25
 Example:
 Dagobert's longsword deals 4-10 of base damage. He rolls 8. Longsword is a slashing weapon and his QoA is 16, so his QoA Augmenting Facor equals: 1 + 0.8 = 1.8. That means: 8 * 1.8 = 14.4. Rounded down to integer it's 14. Rogbar's chainmail has slashing damage redection of 8. That means he is dealt 6 points of damage.
+
 ---
 
 The damage dealt (if any) is subtracted from HEALTH of the warrior that was hit. If it drops below zero, he's dead and his opponent wins.
