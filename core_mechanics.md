@@ -14,26 +14,26 @@ Attack can have 3 different results: **miss** (bad for an attacker), **parry/blo
 * If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) = 0 ===> draw, roll again
 * If warrior #1's OFFENCE + d20 - (warrior #2's OFFENCE + d20) > 0 ===> warrior #2 wins
 
-*Example:
-Dagobert's OFFENCE is **12** and he rolls **12**, so his result equals: **24**
-Rogbar's OFFENCE is **11** and he rolls **9**, so his result equals: **20**
+*Example:  
+Dagobert's OFFENCE is **12** and he rolls **12**, so his result equals: **24**  
+Rogbar's OFFENCE is **11** and he rolls **9**, so his result equals: **20**  
 Dagobert *wins initiative* and attacks.*
 
 ---
 ##### HIT ROLLS FORMULA
 OFFENCE + d20 - (DEFENCE + d20) = Quality of Attack (QoA), if >= 0 ===> a hit on target (can be blocked/parried)
 
-*Example:
-Dagobert's OFFENCE is **12** and he rolls **17**, so his result equals: **29**
-Rogbar's DEFENCE is **8** and he rolls **5**, so his result equals: **13**
+*Example:  
+Dagobert's OFFENCE is **12** and he rolls **17**, so his result equals: **29**  
+Rogbar's DEFENCE is **8** and he rolls **5**, so his result equals: **13**  
 Dagobert succeeds with QoA of **16**. Now Rogbar has a chance to parry or block.*
 
 ---
 ##### DEFENSE - CHANCE TO PARRY/BLOCK ROLL FORMULA
 WEAPON/SHIELD BONUS + d20 - QoA >= 0 ==> a parry/block
 
-*Example:
-Rogbar's shield bonus is **5** and he rolls **10**, so his result equals: **15**.
+*Example:  
+Rogbar's shield bonus is **5** and he rolls **10**, so his result equals: **15**.  
 Dagobert performed an attack with QoA of **16**, so **15** - **16** = **-1**. Rogbar's fails to block an incoming hit.*
 
 In case of using both a weapon and a shield, only the better of the two bonuses is used.
@@ -59,9 +59,9 @@ TODO: Weapon DAMAGE type balance. Now BLUDGEONING is least affected by armor DMG
 * SLASHING QAF = (1 + QoA/20) * 1.00
 * PIERCING QAF = (1 + QoA/20) * 1.25
 
-*Example:
-Dagobert's longsword deals **4**-**10** of base damage. He rolls **8**.
-Longsword is a slashing weapon and his QoA is **16**, so his QoA Augmenting Facor equals: **1** + **0.8** = **1.8**. That is: **8** * **1.8** = **14.4**. Rounded down to integer it's **14**.
+*Example:  
+Dagobert's longsword deals **4**-**10** of base damage. He rolls **8**.  
+Longsword is a slashing weapon and his QoA is **16**, so his QoA Augmenting Facor equals: **1** + **0.8** = **1.8**. That is: **8** * **1.8** = **14.4**. Rounded down to integer it's **14**.   
 Rogbar's chainmail has slashing damage reduction of **8**. That means he is dealt **6** points of damage.*
 
 ---
@@ -89,7 +89,7 @@ Warrior should be able to fight with SHIELD, but DAMAGE dealt that way should be
 * INJURED(LEGS) - both OFFENCE and DEFENCE debuff, same as SLOWED, not as bad as DISORIENTED
 * WOUNDED - a severe OFFENCE and DEFENCE debuff, augmented HEALTH loss
 * DISARMED - has to fight with bare hands or sacrifice attacks for trying to regain his WEAPON
-* MISS - -1 to DEFENCE on each consecutive miss (can be applied many times)
+* MISS - -1 to DEFENCE on each consecutive miss (can be applied many times)  
 * (maybe) Instant fight's end DEATH effects after some crits with very slim chances of happening and some variations like DEATH(IMPALED), DEATH(DECAPITATED), DEATH(DISEMBOWELED), DEATH(CRUSHED) for flavor
 
 ##### RACES & CLASSES
