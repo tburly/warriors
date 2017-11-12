@@ -17,6 +17,7 @@ Example:
 Dagobert's OFFENCE is 12 and he rolls 12, so his result equals: 24
 Rogbar's OFFENCE is 11 and he rolls 9, so his result equals: 20
 Dagobert wins initiative and attacks.
+
 ---
 ##### HIT ROLLS FORMULA
 OFFENCE + d20 - (DEFENCE + d20) = Quality of Attack (QoA), if >= 0 ===> a hit on target (can be blocked/parried)
@@ -24,7 +25,7 @@ Example:
 Dagobert's OFFENCE is 12 and he rolls 17, so his result equals: 29
 Rogbar's DEFENCE is 8 and he rolls 5, so his result equals: 13
 Dagobert succeeds with QoA of 16. Now Rogbar has a chance to parry or block.
----
+
 ---
 ##### DEFENSE - CHANCE TO PARRY/BLOCK ROLL FORMULA
 WEAPON/SHIELD BONUS + d20 - QoA >= 0 ==> a parry/block
