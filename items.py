@@ -137,7 +137,7 @@ class Shield(DefensiveGear, OffensiveGear):
                  dmg_type="bludgeoning",
                  handedness=0.5,
                  encumbrance=1,
-                 to_block=15):
+                 to_block=4):
 
         super(Shield, self).__init__(name=name, damage=damage, dmg_type=dmg_type, handedness=handedness, encumbrance=encumbrance)
         self._to_block = to_block
@@ -155,17 +155,18 @@ class Shield(DefensiveGear, OffensiveGear):
 
 
 WEAPONS = {
-    "Bare Hand": Weapon("Bare Hand", (1, 3)),
-    "Longsword": Weapon("Longsword", (5, 12), "slashing", 1.0, 15)
+    "Bare Hand": Weapon("Bare Hand", (1, 2)),
+    "Longsword": Weapon("Longsword", (4, 10), "slashing", 1.0, 2),
+    "Short Sword": Weapon("Short Sword", (3, 8), "slashing", 1.0, 3)
 }
 
 SHIELDS = {
-    "Tower Shield": Shield("Tower Shield", (1, 4), to_block=25)
+    "Tower Shield": Shield("Tower Shield", (1, 4), to_block=7)
 }
 
 ARMORS = {
     "Adventurer's Garb": Armor("Adventurer's Garb"),
-    "Chainmail": Armor("Chainmail", encumbrance=3, dmg_reduction=DmgReduction(4, 3, 2))
+    "Chainmail": Armor("Chainmail", encumbrance=3, dmg_reduction=DmgReduction(8, 6, 4))
 }
 
 
