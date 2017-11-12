@@ -196,16 +196,16 @@ class Battle(object):
             defender_result = self._defender.offense + defender_roll
 
             if attacker_result > defender_result:
-                print(attacker_result, ">", str(defender_result) + ".", self._attacker.name, "wins initiative")
+                print(str(self._attacker.offense) + " + " + str(attacker_roll), ">", str(self._defender.offense) + " + " + str(defender_roll) + ".", self._attacker.name, "wins initiative")
                 print("Let the battle begin!")
                 break
 
             elif attacker_result == defender_result:
-                print(attacker_result, "=", str(defender_result) + ".", "Draw! Let's roll again")
+                print(str(self._attacker.offense) + " + " + str(attacker_roll), "=", str(self._defender.offense) + " + " + str(defender_roll) + ". Draw! Let's roll again")
                 continue
 
             elif attacker_result < defender_result:
-                print(attacker_result, "<", str(defender_result) + ".", self._defender.name, "wins initiative")
+                print(str(self._attacker.offense) + " + " + str(attacker_roll), "<", str(self._defender.offense) + " + " + str(defender_roll) + ".", self._defender.name, "wins initiative")
                 print("Let the battle begin!")
                 self.swap_sides()
                 break
@@ -225,7 +225,11 @@ class Battle(object):
                 print(self._defender.name + "'s health is: ", self._defender.health)
                 print(self._attacker.name + "'s health is: ", self._attacker.health)
                 print(self._defender.name, "wins after", self._rounds_count, "rounds of relentless battle.")
-                print("************************")
+                print()
+                print("************************************************************************************")
+                print("*************************************** END ****************************************")
+                print("************************************************************************************")
+                print()
                 break
 
             elif self._defender.health <= 0:
@@ -233,7 +237,11 @@ class Battle(object):
                 print(self._attacker.name + "'s health is: ", self._attacker.health)
                 print(self._defender.name + "'s health is: ", self._defender.health)
                 print(self._attacker.name, "wins after", self._rounds_count, "rounds of relentless battle.")
-                print("************************")
+                print()
+                print("************************************************************************************")
+                print("*************************************** END ****************************************")
+                print("************************************************************************************")
+                print()
                 break
 
     def resolve_round(self):
