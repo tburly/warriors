@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 
-from items import Weapon, Armor, Shield, Inventory, DmgReduction, WEAPONS, SHIELDS, ARMORS
+from items import Inventory, WEAPONS, SHIELDS, ARMORS
 from effects import Effect, EFFECTS
-import pprint
+from round_actions import Attack, Block, Parry, DamageDealt, OFFHAND_MODIFIER
 import math
 from random import randrange
 
 """
 Warriors fight
 """
-
-OFFHAND_MODIFIER = 0.75
 
 
 class Warrior(object):
@@ -344,6 +342,20 @@ class Battle(object):
         temp = self.attacker
         self.attacker = self.defender
         self.defender = temp
+
+
+class Round(object):
+    """Has: attacker, defender, attack, offhand_attack"""
+
+    def __init__(self, attacker, defender):
+        super(Round, self).__init__()
+        self.attacker = attacker
+        self.defender = defender
+        self.attack = Attack(self.attacker, self.defender)
+        if self.attacker.inventory.offhand_weapon is not None:
+            self.offhand_attack = Attack(self.attacker, self.defender, OFFHAND_MODIFIER)
+        else:
+            self.offhand_attack = None
 
 
 def report(warrior):
