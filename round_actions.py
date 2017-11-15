@@ -56,7 +56,7 @@ class Attack(Initiative):
             self.resolve()
 
     def calculate_result(self):  # returns int
-        if offhand_modifier is None:  # this is not an off-hand attack
+        if self.offhand_modifier is None:  # this is not an off-hand attack
             return self.attacker.ofense + self.attacker_roll - (self.defender.defense + self.defender_roll)
         else:  # this is an off-hand attack
             return math.floor(self.attacker.offense * self.offhand_modifier) + self.attacker_roll - (self.defender.defense + self.defender_roll)
@@ -66,7 +66,7 @@ class Attack(Initiative):
         if self.defender.inventory.shield is not None:
             self.block = Block(self.attacker, self.defender, self.result)
             hit_deflected = self.block.result
-        elif self.defender.inventory.weapon is not None or self_defender.offhand_weapon is not None:
+        elif self.defender.inventory.weapon is not None or self.defender.offhand_weapon is not None:
             self.parry = Parry(self.attacker, self.defender, self.result)
             hit_deflected = self.parry.result
         if not hit_deflected:
