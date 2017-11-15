@@ -176,7 +176,7 @@ class Battle(object):
 
     @rounds_count.setter
     def rounds_count(self, value):
-        self._rounds_count = value
+        raise NotImplementedError("This setter method ought not to be called")
 
     def resolve_initiative(self):
         print()
@@ -215,7 +215,7 @@ class Battle(object):
 
         while True:
             print()
-            print("******** ROUND #", self._rounds_count, "********")
+            print("******** ROUND #" + str(self._rounds_count), "********")
             print("Attacker is:", str(self._attacker))
             print("Defender is:", str(self._defender))
             self.resolve_round()
@@ -249,7 +249,7 @@ class Battle(object):
         hits = 0
 
         # attack
-        quality_of_attack = self.calculate_hit()
+        quality_of_attack = self.calculate_attack()
         if quality_of_attack < 0:
             print("It's a miss!")
             misses += 1
@@ -261,7 +261,7 @@ class Battle(object):
 
         # off-hand attack
         if self._attacker.inventory.offhand_weapon is not None:
-            quality_of_offhand_attack = self.calculate_offhand_hit()
+            quality_of_offhand_attack = self.calculate_offhand_attack()
             if quality_of_offhand_attack < 0:
                 print("It's a miss!")
                 misses += 1
@@ -282,8 +282,8 @@ class Battle(object):
         self.swap_sides()
         self.rounds_count += 1
 
-    def calculate_hit(self):
-        print("*** HIT ***")
+    def calculate_attack(self):
+        print("*** ATTACK ***")
         print(self._attacker.name, "swings his", self._attacker.inventory.weapon.name.lower(), "at", self._defender.name)
         attacker_roll = randrange(1, 21)
         defender_roll = randrange(1, 21)
@@ -297,8 +297,8 @@ class Battle(object):
 
         return quality_of_attack
 
-    def calculate_offhand_hit(self):
-        print("*** OFF-HAND HIT ***")
+    def calculate_offhand_attack(self):
+        print("*** OFF-HAND ATTACK ***")
         print(self._attacker.name, "swings his", self._attacker.inventory.offhand_weapon.name.lower(), "at", self._defender.name)
         attacker_roll = randrange(1, 21)
         defender_roll = randrange(1, 21)
@@ -352,6 +352,11 @@ class Battle(object):
         elif self._defender.inventory.weapon is None and self._defender.inventory.offhand_weapon is not None:
             print(self._defender.name, "tries to parry with his off-hand weapon")
             parrying_bonus += math.floor(self._defender.inventory.offhand_weapon.to_parry * OFFHAND_MODIFIER)
+
+        if parrying_bonus <= 0:
+            print("His parrying bonus is:", parrying_bonus)
+            print(self._defender.name, "has no weapon to parry with. Parry failed!")
+            return False
 
         print("His parrying bonus is:", parrying_bonus)
 
