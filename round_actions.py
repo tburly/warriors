@@ -7,6 +7,7 @@ OFFHAND_MODIFIER = 0.75
 class RoundAction(object):
     """
     Has: attacker, defender, result
+    The root for all classes in this module
     This class is treated as an abstract class and shouldn't be instantiated
     """
 
@@ -14,22 +15,38 @@ class RoundAction(object):
         super(RoundAction, self).__init__()
         self.attacker = attacker
         self.defender = defender
-        self.result = None  # int or boolean depending on child class calculate_result() implementation
+        self.result = None  # depends entirely on child class calculate_result() implementation
 
     def calculate_result(self):  # to be overriden in child classes
         pass
 
 
-class Attack(RoundAction):
+class Initiative(RoundAction):
+    """Has: attacker_roll, defender_roll    """
+
+    def __init__(self, attacker, defender):
+        super(Initiative, self).__init__(attacker, defender)
+        self.attacker_roll = randrange(1, 21)
+        self.defender_roll = randrange(1, 21)
+        self.result = self.calculate_result()
+
+    def calculate_result(self):
+        if self.attacker.offense + self.attacker_roll > self.defender.offense + self.defender_roll:
+            return "attacker"
+        elif self.attacker.offense + self.attacker_roll == self.defender.offense + self.defender_roll:
+            return "draw"
+        elif self.attacker.offense + self.attacker_roll < self.defender.offense + self.defender_roll:
+            return "defender"
+
+
+class Attack(Initiative):
     """
-    Has: attacker_roll, defender_roll, offhand_modifier, block, parry and dmg_dealt.
+    Has: offhand_modifier, block, parry and dmg_dealt.
     If you want an off-hand attack, pass an offhand_modifier that is not None
     """
 
     def __init__(self, attacker, defender, offhand_modifier=None):
         super(Attack, self).__init__(attacker, defender)
-        self.attacker_roll = randrange(1, 21)
-        self.defender_roll = randrange(1, 21)
         self.offhand_modifier = offhand_modifier
         self.result = self.calculate_result()
         self.block = None
