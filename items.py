@@ -1,4 +1,5 @@
 from collections import namedtuple
+import json
 
 DmgReduction = namedtuple("DmgReduction", ["slashing", "piercing", "bludgeoning"])
 
@@ -11,7 +12,6 @@ class Item(object):
 
     def __init__(self, name):
         super(Item, self).__init__()
-
         self.name = name
 
 
@@ -25,7 +25,7 @@ class OffensiveGear(Item):
         super(OffensiveGear, self).__init__(**kwargs)
         self.damage = damage  # two numbers tuple
         self.dmg_type = dmg_type  # corresponding to dmg_reduction in Armor
-        self.handedness = handedness
+        self.handedness = handedness  # float
 
     def __str__(self):
         return "{} ({})".format(self.name, self.dmg_type)
@@ -86,21 +86,70 @@ class Shield(DefensiveGear, OffensiveGear):
     def __str__(self):
         return "{} ({}, {}, {}, {})".format(self.name, self.damage, self.dmg_type, self.handedness, self.to_block)
 
+# item data parsing functions
 
-WEAPONS = {
-    "Bare Hand": Weapon("Bare Hand", (1, 2)),
-    "Longsword": Weapon("Longsword", (4, 10), "slashing", 1.0, 2),
-    "Short Sword": Weapon("Short Sword", (3, 8), "slashing", 1.0, 3)
-}
 
-SHIELDS = {
-    "Tower Shield": Shield("Tower Shield", (1, 4), to_block=7)
-}
+def parse_weapon_data():
+    with open("data/item_data.json") as json_file:
+        weapon_list = json.load(json_file)["weapons"]
 
-ARMORS = {
-    "Adventurer's Garb": Armor("Adventurer's Garb"),
-    "Chainmail": Armor("Chainmail", encumbrance=3, dmg_reduction=DmgReduction(8, 6, 4))
-}
+    weapon_data = {}
+    for weapon in weapon_list:
+        weapon_data.update({
+            weapon["name"]: Weapon(
+                weapon["name"],
+                (weapon["damage"][0], weapon["damage"][1]),
+                weapon["dmg_type"],
+                weapon["handedness"],
+                weapon["to_parry"]
+            )
+        })
+
+    return weapon_data
+
+
+def parse_shield_data():
+    with open("data/item_data.json") as json_file:
+        shield_list = json.load(json_file)["shields"]
+
+    shield_data = {}
+    for shield in shield_list:
+        shield_data.update({
+            shield["name"]: Shield(
+                shield["name"],
+                damage=(shield["damage"][0], shield["damage"][1]),
+                encumbrance=shield["encumbrance"],
+                to_block=shield["to_block"]
+            )
+        })
+
+    return shield_data
+
+
+def parse_armor_data():
+    with open("data/item_data.json") as json_file:
+        armor_list = json.load(json_file)["armors"]
+
+    armor_data = {}
+    for armor in armor_list:
+        armor_data.update({
+            armor["name"]: Armor(
+                armor["name"],
+                encumbrance=armor["encumbrance"],
+                dmg_reduction=DmgReduction(
+                    armor["dmg_reduction"][0],
+                    armor["dmg_reduction"][1],
+                    armor["dmg_reduction"][2]
+                )
+            )
+        })
+
+    return armor_data
+
+
+WEAPONS = parse_weapon_data()
+SHIELDS = parse_shield_data()
+ARMORS = parse_armor_data()
 
 
 class Inventory(object):

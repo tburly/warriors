@@ -1,0 +1,51 @@
+{
+    "weapons": [
+        {
+            "name": "Bare Hand",
+            "damage": [1, 2],
+            "dmg_type": "bludgeoning",
+            "handedness": 1.0,
+            "to_parry": 0
+        },
+        {
+            "name": "Longsword",
+            "damage": [4, 10],
+            "dmg_type": "slashing",
+            "handedness": 1.0,
+            "to_parry": 2
+        },
+        {
+            "name": "Short Sword",
+            "damage": [3, 8],
+            "dmg_type": "slashing",
+            "handedness": 1.0,
+            "to_parry": 3
+        }
+    ],
+    "shields": [
+        {
+            "name": "Tower Shield",
+            "encumbrance": 1,
+            "to_block": 7,
+            "damage": [1, 4]
+        },
+        {
+            "name": "Kite Shield",
+            "encumbrance": 1,
+            "to_block": 6,
+            "damage": [1, 4]
+        }
+    ],
+    "armors": [
+        {
+            "name": "Adventurer's Garb",
+            "encumbrance": 0,
+            "dmg_reduction": [1, 0, 0]
+        },
+        {
+            "name": "Chainmail",
+            "encumbrance": 3,
+            "dmg_reduction": [8, 6, 4]
+        }
+    ]
+}

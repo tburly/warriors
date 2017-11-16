@@ -102,7 +102,7 @@ Future Warrior subclasses should be implemented through EFFECTS, e.g.:
 
 EFFECTS also should facilitate a possible introduction of races at some point.
 
-Introduction of STRENGTH, DEXTERITY & CONSTITUTION (and maybe some MAGIC) would spice things a lot, but maybe let's not overcomplicate everything too much from the start.
+Introduction of STRENGTH, DEXTERITY & CONSTITUTION (and maybe some MAGIC) would spice things up a lot, but maybe let's not overcomplicate things too much from the start.
 
 * STRENGTH should affect DAMAGE dealt most (BLUDGEONING > SLASHING > PIERCING).
 * DEXTERITY should affect OFFENSE & DEFENSE most.
