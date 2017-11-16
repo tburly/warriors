@@ -3,6 +3,7 @@
 from items import Inventory, WEAPONS, SHIELDS, ARMORS
 from effects import Effect, EFFECTS
 from round_actions import Initiative, Attack, OFFHAND_MODIFIER
+import herald
 from copy import deepcopy
 
 """
@@ -107,19 +108,19 @@ class Battle(object):
         self.base_defender = deepcopy(defender)
 
     def resolve_initiative(self):
-        # TODO: announcement
+        herald.introduce_battle(self.attacker, self.defender)
 
         while True:
             initiative = Initiative(self.attacker, self.defender)
 
             if initiative.result == "attacker":
-                # TODO: announcement
+                herald.report_initiative(initiative)
                 break
             elif initiative.result == "draw":
-                # TODO: announcement
+                herald.report_initiative(initiative)
                 continue
             elif initiative.result == "defender":
-                # TODO: announcement
+                herald.report_initiative(initiative)
                 self.swap_sides()
                 break
 
@@ -127,15 +128,12 @@ class Battle(object):
         self.resolve_initiative()
 
         while True:
+            herald.introduce_round(self.attacker, self.defender, len(rounds) + 1)
             battle_round = BattleRound(self.attacker, self.defender)
             self.rounds.append(battle_round)
-            # TODO: announcement
 
-            if self.attacker.health <= 0:
-                # TODO: announcement
-                break
-            elif self.defender.health <= 0:
-                # TODO: announcement
+            if self.attacker.health <= 0 or self.defender.health <= 0:
+                herald.close_battle(attacker, defender, len(rounds))
                 break
 
             battle_round.resolve_effects()
@@ -178,11 +176,6 @@ class BattleRound(object):
                     self.attacker.discard_effect(miss)
 
 
-def report(warrior):
-    print()
-    print("Hail, my good fellow. I am {}. My health is {}. My offense/defense rating is {}/{}. I'm affected by following effects: {}. I'm equipped with: \n{}".format(warrior.name, warrior.health, warrior.offense, warrior.defense, [effect.name for effect in warrior.effects], str(warrior.inventory)))
-
-
 def main():
     """Runs the game"""
     dagobert = Warrior("Dagobert")
@@ -195,8 +188,8 @@ def main():
     rogbar.equip_offhand_weapon(WEAPONS["Short Sword"])
     rogbar.equip_armor(ARMORS["Chainmail"])
 
-    report(dagobert)
-    report(rogbar)
+    herald.report(dagobert)
+    herald.report(rogbar)
 
     battle = Battle(dagobert, rogbar)
     battle.commence()
