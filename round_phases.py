@@ -4,7 +4,7 @@ import math
 OFFHAND_MODIFIER = 0.75
 
 
-class RoundAction(object):
+class RoundPhase(object):
     """
     Has: attacker, defender, result
     The root for all classes in this module
@@ -12,7 +12,7 @@ class RoundAction(object):
     """
 
     def __init__(self, attacker, defender):
-        super(RoundAction, self).__init__()
+        super(RoundPhase, self).__init__()
         self.attacker = attacker
         self.defender = defender
         self.result = None  # depends entirely on child class calculate_result() implementation
@@ -21,19 +21,19 @@ class RoundAction(object):
         pass
 
 
-class TwoRollsAction(RoundAction):
+class TwoRollsPhase(RoundPhase):
     """
     Has: attacker_roll, defender_roll
     This class is treated as an abstract class and shouldn't be instantiated
     """
 
     def __init__(self, attacker, defender):
-        super(TwoRollsAction, self).__init__(attacker, defender)
+        super(TwoRollsPhase, self).__init__(attacker, defender)
         self.attacker_roll = randrange(1, 21)
         self.defender_roll = randrange(1, 21)
 
 
-class Initiative(TwoRollsAction):
+class Initiative(TwoRollsPhase):
     """Has: implementation for result"""
 
     def __init__(self, attacker, defender):
@@ -49,7 +49,7 @@ class Initiative(TwoRollsAction):
             return "defender"
 
 
-class Attack(TwoRollsAction):
+class Attack(TwoRollsPhase):
     """
     Has: offhand_modifier, block, parry and dmg_dealt.
     If you want an off-hand attack, pass an offhand_modifier that is not None
@@ -88,19 +88,19 @@ class Attack(TwoRollsAction):
             self.defender.health -= self.dmg_dealt.result
 
 
-class OneRollDefensiveAction(RoundAction):
+class OneRollAfterAttackPhase(RoundPhase):
     """
     Has: roll, hit_result
     This class is treated as an abstract class and shouldn't be instantiated
     """
 
     def __init__(self, attacker, defender, hit_result):
-        super(OneRollDefensiveAction, self).__init__(attacker, defender)
+        super(OneRollAfterAttackPhase, self).__init__(attacker, defender)
         self.roll = randrange(1, 21)
         self.hit_result = hit_result
 
 
-class Block(OneRollDefensiveAction):
+class Block(OneRollAfterAttackPhase):
     """Has: implementation for result"""
 
     def __init__(self, attacker, defender, hit_result):
@@ -115,7 +115,7 @@ class Block(OneRollDefensiveAction):
             return True
 
 
-class Parry(OneRollDefensiveAction):
+class Parry(OneRollAfterAttackPhase):
     """
     Has: parrying bonus, offhand_modifier
 
@@ -157,7 +157,7 @@ class Parry(OneRollDefensiveAction):
             return True
 
 
-class DamageDealt(OneRollDefensiveAction):
+class DamageDealt(OneRollAfterAttackPhase):
     """Has: weapon, augmenting, reduction"""
 
     def __init__(self, attacker, defender, hit_result, weapon):
