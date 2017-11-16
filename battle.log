@@ -5,12 +5,12 @@ Rogbar equips a weapon: Longsword ((4, 10), slashing, 1.0, 2)
 Rogbar equips an off-hand weapon: Short Sword ((3, 8), slashing, 1.0, 3)
 Rogbar equips an armor: Chainmail (3, DmgReduction(slashing=8, piercing=6, bludgeoning=4))
 
-Hail, my good fellow. I am Dagobert. My health is 30. My offense/defense rating is 10/10. I'm affected by following effects: []. I'm equipped with: 
+Hail, my good fellow. I am Dagobert. My health is 30. My offense/defense rating is 10/10. I'm affected by following effects: []. I'm equipped with:
 Longsword ((4, 10), slashing, 1.0, 2)
 Tower Shield ((1, 4), bludgeoning, 0.5, 7)
 Chainmail (3, DmgReduction(slashing=8, piercing=6, bludgeoning=4))
 
-Hail, my good fellow. I am Rogbar. My health is 30. My offense/defense rating is 10/10. I'm affected by following effects: []. I'm equipped with: 
+Hail, my good fellow. I am Rogbar. My health is 30. My offense/defense rating is 10/10. I'm affected by following effects: []. I'm equipped with:
 Longsword ((4, 10), slashing, 1.0, 2)
 Short Sword ((3, 8), slashing, 1.0, 3)
 Chainmail (3, DmgReduction(slashing=8, piercing=6, bludgeoning=4))
