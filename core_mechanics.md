@@ -30,13 +30,15 @@ Dagobert succeeds with QoA of **16**. Now Rogbar has a chance to parry or block.
 
 ---
 ##### DEFENSE - CHANCE TO PARRY/BLOCK ROLL FORMULA
-WEAPON/SHIELD BONUS + d20 - QoA >= 0 ==> a parry/block
+PARRY/BLOCK BONUS + d20 - QoA >= 0 ==> a parry/block
 
 *Example:  
 Rogbar's shield bonus is **5** and he rolls **10**, so his result equals: **15**.  
 Dagobert performed an attack with QoA of **16**, so **15** - **16** = **-1**. Rogbar's fails to block an incoming hit.*
 
-In case of using both a weapon and a shield, only the better of the two bonuses is used.
+In case of using both a weapon and a shield, only the shield is used. In case of parrying with bith weapons (main and off-hand), their both parrying bonuses are summed (but the one coming from the off-hand one is multiplied by OFFHAND_MODIFIER).
+
+TODO: Redesign this two cases to using two rolls - but making the second (parry with main weapon when using shield and parry with off-hand weapon when using two weapons) a slim chance.
 
 ---
 
