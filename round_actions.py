@@ -17,20 +17,30 @@ class RoundAction(object):
         self.defender = defender
         self.result = None  # depends entirely on child class calculate_result() implementation
 
-    def calculate_result(self):  # to be overriden in child classes
+    def calculate_result(self):  # to be overriden in child (last generation!) classes
         pass
 
 
-class Initiative(RoundAction):
-    """Has: attacker_roll, defender_roll    """
+class TwoRollsAction(RoundAction):
+    """
+    Has: attacker_roll, defender_roll
+    This class is treated as an abstract class and shouldn't be instantiated
+    """
+
+    def __init__(self, attacker, defender):
+        super(TwoRollsAction, self).__init__(attacker, defender)
+        self.attacker_roll = randrange(1, 21)
+        self.defender_roll = randrange(1, 21)
+
+
+class Initiative(TwoRollsAction):
+    """Has: implementation for result"""
 
     def __init__(self, attacker, defender):
         super(Initiative, self).__init__(attacker, defender)
-        self.attacker_roll = randrange(1, 21)
-        self.defender_roll = randrange(1, 21)
         self.result = self.calculate_result()
 
-    def calculate_result(self):
+    def calculate_result(self):  # returns string
         if self.attacker.offense + self.attacker_roll > self.defender.offense + self.defender_roll:
             return "attacker"
         elif self.attacker.offense + self.attacker_roll == self.defender.offense + self.defender_roll:
@@ -39,7 +49,7 @@ class Initiative(RoundAction):
             return "defender"
 
 
-class Attack(Initiative):
+class Attack(TwoRollsAction):
     """
     Has: offhand_modifier, block, parry and dmg_dealt.
     If you want an off-hand attack, pass an offhand_modifier that is not None
@@ -57,7 +67,7 @@ class Attack(Initiative):
 
     def calculate_result(self):  # returns int
         if self.offhand_modifier is None:  # this is not an off-hand attack
-            return self.attacker.ofense + self.attacker_roll - (self.defender.defense + self.defender_roll)
+            return self.attacker.offense + self.attacker_roll - (self.defender.defense + self.defender_roll)
         else:  # this is an off-hand attack
             return math.floor(self.attacker.offense * self.offhand_modifier) + self.attacker_roll - (self.defender.defense + self.defender_roll)
 
@@ -74,24 +84,38 @@ class Attack(Initiative):
                 weapon = self.attacker.inventory.weapon
             else:  # this is an off-hand attack
                 weapon = self.attacker.inventory.offhand_weapon
-            self.dmg_dealt = DamageDealt(self.attacker, self.defender, self.reult, weapon)
+            self.dmg_dealt = DamageDealt(self.attacker, self.defender, self.result, weapon)
             self.defender.health -= self.dmg_dealt.result
 
 
-class Block(RoundAction):
-    """Has: roll"""
+class OneRollDefensiveAction(RoundAction):
+    """
+    Has: roll, hit_result
+    This class is treated as an abstract class and shouldn't be instantiated
+    """
 
     def __init__(self, attacker, defender, hit_result):
-        super(Block, self).__init__(attacker, defender)
+        super(OneRollDefensiveAction, self).__init__(attacker, defender)
         self.roll = randrange(1, 21)
         self.hit_result = hit_result
+
+
+class Block(OneRollDefensiveAction):
+    """Has: implementation for result"""
+
+    def __init__(self, attacker, defender, hit_result):
+        super(Block, self).__init__(attacker, defender, hit_result)
         self.result = self.calculate_result()
 
     def calculate_result(self):  # returns boolean
-        return self.defender.inventory.shield.to_block + self.roll - self.hit_result
+        result = self.defender.inventory.shield.to_block + self.roll - self.hit_result
+        if result < 0:
+            return False
+        else:
+            return True
 
 
-class Parry(Block):
+class Parry(OneRollDefensiveAction):
     """
     Has: parrying bonus, offhand_modifier
 
@@ -133,15 +157,14 @@ class Parry(Block):
             return True
 
 
-class DamageDealt(RoundAction):
-    """Has: weapon, weapon_roll, augmenting, reduction"""
+class DamageDealt(OneRollDefensiveAction):
+    """Has: weapon, augmenting, reduction"""
 
     def __init__(self, attacker, defender, hit_result, weapon):
-        super(DamageDealt, self).__init__(attacker, defender)
-        self.hit_result = hit_result
+        super(DamageDealt, self).__init__(attacker, defender, hit_result)
         self.weapon = weapon
-        self.weapon_roll = randrange(self.weapon.damage[0], self.weapon.damage[1] + 1)
-        self.augmenting, self._reduction = self.calculate_dmg_factors()  # float, int
+        self.roll = randrange(self.weapon.damage[0], self.weapon.damage[1] + 1)
+        self.augmenting, self.reduction = self.calculate_dmg_factors()  # float, int
         self.result = self.calculate_result()
 
     def calculate_dmg_factors(self):  # returns (float, int)
@@ -160,7 +183,7 @@ class DamageDealt(RoundAction):
         return augmenting, reduction
 
     def calculate_result(self):  # returns int
-        result = math.floor(self.weapon_roll * self.augmenting) - self._reduction
+        result = math.floor(self.roll * self.augmenting) - self.reduction
         if result <= 0:
             return 0
         else:

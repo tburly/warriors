@@ -128,12 +128,12 @@ class Battle(object):
         self.resolve_initiative()
 
         while True:
-            herald.introduce_round(self.attacker, self.defender, len(rounds) + 1)
+            herald.introduce_round(self.attacker, self.defender, len(self.rounds) + 1)
             battle_round = BattleRound(self.attacker, self.defender)
             self.rounds.append(battle_round)
 
             if self.attacker.health <= 0 or self.defender.health <= 0:
-                herald.close_battle(attacker, defender, len(rounds))
+                herald.close_battle(self.attacker, self.defender, len(self.rounds))
                 break
 
             battle_round.resolve_effects()
@@ -153,12 +153,15 @@ class BattleRound(object):
         self.attacker = attacker
         self.defender = defender
         self.attack = Attack(self.attacker, self.defender)
+        herald.report_attack(self.attack)
         if self.attacker.inventory.offhand_weapon is not None:
             self.offhand_attack = Attack(self.attacker, self.defender, OFFHAND_MODIFIER)
+            herald.report_attack(self.offhand_attack)
         else:
             self.offhand_attack = None
 
     def resolve_effects(self):
+        # TODO: delegate effects parsing logic to a seperate class
         # MISS effect - remove all if there was at least one hit, apply if otherwise
         if self.offhand_attack is None:
             if self.attack.result < 0:
