@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+Warriors fight
+"""
+
 from items import Inventory, WEAPONS, SHIELDS, ARMORS
 from effects import Effect, EFFECTS
 from round_phases import Initiative, Attack, OFFHAND_MODIFIER
 import herald
 from copy import deepcopy
-
-"""
-Warriors fight
-"""
 
 
 class Warrior(object):

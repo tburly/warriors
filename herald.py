@@ -1,5 +1,5 @@
 """
-Functions bundled in this module make various announcements about the current game's state to the standard output
+Functions bundled in this module make various announcements about the current game state to the standard output
 """
 
 import math

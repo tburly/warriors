@@ -2,6 +2,9 @@ from random import randrange
 import math
 
 OFFHAND_MODIFIER = 0.75
+BLUDGEONING_MODIFIER = 0.75
+SLASHING_MODIFIER = 1.00
+PIERCING_MODIFIER = 1.25
 
 
 class RoundPhase(object):
@@ -52,9 +55,9 @@ class Initiative(TwoRollsPhase):
 class Attack(TwoRollsPhase):
     """
     Has: offhand_modifier, block, parry and dmg_dealt.
-    If you want an off-hand attack, pass an offhand_modifier that is not None
     """
 
+    # if you want an off-hand attack, pass an offhand_modifier that is not None
     def __init__(self, attacker, defender, offhand_modifier=None):
         super(Attack, self).__init__(attacker, defender)
         self.offhand_modifier = offhand_modifier
@@ -171,13 +174,13 @@ class DamageDealt(OneRollAfterAttackPhase):
         augmenting = 0.0
         reduction = 0
         if self.weapon.dmg_type == "bludgeoning":
-            augmenting += (1 + self.hit_result / 20) * 0.75
+            augmenting += (1 + self.hit_result / 20) * BLUDGEONING_MODIFIER
             reduction += self.defender.inventory.armor.dmg_reduction.bludgeoning
         elif self.weapon.dmg_type == "slashing":
-            augmenting += 1 + self.hit_result / 20
+            augmenting += 1 + self.hit_result / 20 * SLASHING_MODIFIER
             reduction += self.defender.inventory.armor.dmg_reduction.slashing
         elif self.weapon.dmg_type == "piercing":
-            augmenting += (1 + self.hit_result / 20) * 1.25
+            augmenting += (1 + self.hit_result / 20) * PIERCING_MODIFIER
             reduction += self.defender.inventory.armor.dmg_reduction.piercing
 
         return augmenting, reduction
