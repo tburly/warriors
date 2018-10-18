@@ -7,4 +7,4 @@ I strive to realistically simulate a fight of two quasi-medieval warriors as muc
 
 I sticked to d20 rolls and corresponding range of numbers, because that's what I felt most familiar with.
 
-Read the **[core_mechanics.md](https://github.com/tburly/warriors/blob/master/core_mechanics.md)** for a comprehensive write-up of planned and already implemented mechanics.
+Read the **[core_mechanics.md](https://github.com/z33kz33k/warriors/blob/master/core_mechanics.md)** for a comprehensive write-up of planned and already implemented mechanics.

@@ -163,7 +163,7 @@ class Inventory(object):
         super(Inventory, self).__init__()
 
         self.weapon = weapon
-        self._offhand_weapon = None  # property
+        self._offhand_weapon = None  # property TODO: tu powinna być zwykła nazwa bez '_' - wtedy również kontruktor używałby wrapperów 'property' i nie byłoby konieczności pomijania tych pól w liście argumentów (generalnie trochę źle to zrozumiałem, gdy to pisałem - za dużo myślenia javowego o 'deklarowaniu' pól i myśleniu o podkreślniku w nazwie jak o odpowiedniku 'private')
         self._shield = None  # property
         self.armor = armor
         if items is None:
@@ -175,10 +175,10 @@ class Inventory(object):
         text = []
         if self.weapon is not None:
             text.append(str(self.weapon))
-        if self._offhand_weapon is not None:
-            text.append(str(self._offhand_weapon))
-        if self._shield is not None:
-            text.append(str(self._shield))
+        if self.offhand_weapon is not None:
+            text.append(str(self.offhand_weapon))
+        if self.shield is not None:
+            text.append(str(self.shield))
         if self.armor is not None:
             text.append(str(self.armor))
         if len(self.items) > 0:
@@ -194,7 +194,7 @@ class Inventory(object):
     @offhand_weapon.setter
     def offhand_weapon(self, value):
         try:
-            if self._shield is not None:
+            if self.shield is not None:
                 raise ValueError("Can't wield an off-hand weapon while wielding a shield")
             if self.weapon is not None:
                 if self.weapon.handedness > 1.0:
@@ -215,7 +215,7 @@ class Inventory(object):
     @shield.setter
     def shield(self, value):
         try:
-            if self._offhand_weapon is not None:
+            if self.offhand_weapon is not None:
                 raise ValueError("Can't wield a shield while wielding an off-hand weapon")
             if self.weapon is not None:
                 if self.weapon.handedness > 1.5:

@@ -6,9 +6,11 @@ Warriors fight
 
 from items import Inventory, WEAPONS, SHIELDS, ARMORS
 from effects import Effect, EFFECTS
-from round_phases import Initiative, Attack, OFFHAND_MODIFIER
+from phases import Initiative, Attack, OFFHAND_MODIFIER
 import herald
 from copy import deepcopy
+
+# TODO: get rid of Python2 style super() calls in constructors
 
 
 class Warrior(object):
@@ -95,7 +97,7 @@ class Warrior(object):
 
 
 class Battle(object):
-    """Commences. Has: attacker, defender, base_attacker, base_defender"""
+    """Commences. Has: attacker, defender, rounds, base_attacker, base_defender"""
 
     def __init__(self, attacker, defender):
         super(Battle, self).__init__()
